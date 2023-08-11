@@ -77,7 +77,7 @@ function publishToQueue(RABBITMQ_USER, RABBITMQ_PASS, RABBITMQ_HOST, RABBITMQ_PO
       console.log("asserting channel");
 
       var MESSAGE = JSON.stringify(OBJECT);
-      channel.publish('', QUEUENAME, Buffer.from(MESSAGE));
+      channel.publish('', QUEUE, Buffer.from(MESSAGE));
       console.log("message sent");
       console.log(" [x] Sent %s", MESSAGE);
     });
