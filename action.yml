@@ -5,7 +5,10 @@ inputs:
   OBJECT:
     description: "Object to send."
     required: true
-  QUEUENAME:
+  PASSWORD_VAULT_URL:
+    description: "Password vault url."
+    required: false
+  QUEUE:
     description: "The name of the queue you are sending to."
     required: true
   RABBITMQ_HOST:
@@ -14,10 +17,10 @@ inputs:
   RABBITMQ_PORT:
     description: "RabbitMQ port."
     required: true
-  RABBITMQ_USERNAME:
+  RABBITMQ_USER:
     description: "RabbitMQ username."
     required: true
-  RABBITMQ_PASSWORD:
+  RABBITMQ_PASS:
     description: "RabbitMQ password."
     required: true
 runs:

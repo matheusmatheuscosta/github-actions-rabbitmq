@@ -1,17 +1,43 @@
 #!/usr/bin/env node
+const axios = require('axios');
 const core = require('@actions/core');
 const amqp = require('amqplib/callback_api');
 console.log("amqp created.");
 try {
-  const RABBITMQ_HOST = core.getInput("RABBITMQ_HOST");
-  const RABBITMQ_PORT = core.getInput("RABBITMQ_PORT");
-  const RABBITMQ_USERNAME = core.getInput("RABBITMQ_USERNAME");
-  const RABBITMQ_PASSWORD = core.getInput("RABBITMQ_PASSWORD");
+  const PASSWORD_VAULT_URL = core.getInput("PASSWORD_VAULT_URL");
+  let RABBITMQ_HOST = core.getInput("RABBITMQ_HOST");
+  let RABBITMQ_PORT = core.getInput("RABBITMQ_PORT");
+  let RABBITMQ_USER = core.getInput("RABBITMQ_USER");
+  let RABBITMQ_PASS = core.getInput("RABBITMQ_PASS");
+  let OBJECT = core.getInput("OBJECT");
+  let QUEUE = core.getInput("QUEUE");
 
-  const OBJECT = core.getInput("OBJECT");
-  const QUEUENAME = core.getInput("QUEUENAME");
+  if (PASSWORD_VAULT_URL) {
+    const url = PASSWORD_VAULT_URL + '/secrets/replace';
+    const data = {
+      RABBITMQ_HOST: RABBITMQ_HOST,
+      RABBITMQ_PORT: RABBITMQ_PORT,
+      RABBITMQ_USER: RABBITMQ_USER,
+      RABBITMQ_PASS: RABBITMQ_PASS,
+      OBJECT: OBJECT,
+      QUEUE: QUEUE
+    }
+    let retorno = null;
+    axios.post(url, data).then(function (response) {
+      console.log("retorno: " + retorno);
+      retorno = response.data;
+      RABBITMQ_HOST = retorno.RABBITMQ_HOST;
+      RABBITMQ_PORT = retorno.RABBITMQ_PORT;
+      RABBITMQ_USER = retorno.RABBITMQ_USER;
+      RABBITMQ_PASS = retorno.RABBITMQ_PASS;
+      OBJECT = retorno.OBJECT;
+      QUEUE = retorno.QUEUE;
+    }).catch(function (error) {
+      console.log(error);
+    });
+  }
 
-  var url = 'amqp://' + RABBITMQ_USERNAME + ':' + RABBITMQ_PASSWORD + '@' + RABBITMQ_HOST + ':' + RABBITMQ_PORT;
+  var url = 'amqp://' + RABBITMQ_USER + ':' + RABBITMQ_PASS + '@' + RABBITMQ_HOST + ':' + RABBITMQ_PORT;
   console.log("Url: " + url);
   amqp.connect(url, function (error0, connection) {
     if (error0) {
@@ -25,7 +51,7 @@ try {
         throw error1;
       }
 
-      channel.assertQueue(QUEUENAME, {
+      channel.assertQueue(QUEUE, {
         durable: true,
         exclusive: false,
         autoDelete: false,
