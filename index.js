@@ -11,15 +11,6 @@ try {
   let RABBITMQ_PASS = core.getInput("RABBITMQ_PASS");
   let OBJECT = core.getInput("OBJECT");
   let QUEUE = core.getInput("QUEUE");
-
-  console.log("PASSWORD_VAULT_URL: " + PASSWORD_VAULT_URL);
-  console.log("RABBITMQ_HOST: " + RABBITMQ_HOST);
-  console.log("RABBITMQ_PORT: " + RABBITMQ_PORT);
-  console.log("RABBITMQ_USER: " + RABBITMQ_USER);
-  console.log("RABBITMQ_PASS: " + RABBITMQ_PASS);
-  console.log("OBJECT: " + OBJECT);
-  console.log("QUEUE: " + QUEUE);
-
   if (PASSWORD_VAULT_URL) {
     const url = PASSWORD_VAULT_URL + '/secrets/replace';
     const data = {
@@ -55,7 +46,6 @@ try {
 // cria função para publicar na fila
 function publishToQueue(RABBITMQ_USER, RABBITMQ_PASS, RABBITMQ_HOST, RABBITMQ_PORT, QUEUE, OBJECT) {
   var url = 'amqp://' + RABBITMQ_USER + ':' + RABBITMQ_PASS + '@' + RABBITMQ_HOST + ':' + RABBITMQ_PORT;
-  console.log("Url: " + url);
   amqp.connect(url, function (error0, connection) {
     if (error0) {
       console.log("error0: " + error0);
@@ -75,7 +65,6 @@ function publishToQueue(RABBITMQ_USER, RABBITMQ_PASS, RABBITMQ_HOST, RABBITMQ_PO
         arguments: null
       });
       console.log("asserting channel");
-
       var MESSAGE = JSON.stringify(OBJECT);
       channel.publish('', QUEUE, Buffer.from(MESSAGE));
       console.log("message sent");
