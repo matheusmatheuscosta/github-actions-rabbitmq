@@ -1,0 +1,28 @@
+name: "Github Actions Rabbitmq"
+author: "Matheus Costa"
+description: "Rabbitmq integration github actions by passwords"
+inputs:
+  OBJECT:
+    description: "Object to send."
+    required: true
+  QUEUENAME:
+    description: "The name of the queue you are sending to."
+    required: true
+  RABBITMQ_HOST:
+    description: "RabbitMQ host name"
+    required: true
+  RABBITMQ_PORT:
+    description: "RabbitMQ port."
+    required: true
+  RABBITMQ_USERNAME:
+    description: "RabbitMQ username."
+    required: true
+  RABBITMQ_PASSWORD:
+    description: "RabbitMQ password."
+    required: true
+runs:
+  using: "node12"
+  main: "dist/index.js"
+branding:
+  color: "orange"
+  icon: "message-circle"
