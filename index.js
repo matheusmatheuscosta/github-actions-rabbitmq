@@ -23,7 +23,6 @@ try {
     }
     let retorno = null;
     axios.post(url, data).then(function (response) {
-      console.log("retorno: " + retorno);
       retorno = response.data;
       RABBITMQ_HOST = retorno.RABBITMQ_HOST;
       RABBITMQ_PORT = retorno.RABBITMQ_PORT;
@@ -65,8 +64,8 @@ function publishToQueue(RABBITMQ_USER, RABBITMQ_PASS, RABBITMQ_HOST, RABBITMQ_PO
         arguments: null
       });
       console.log("asserting channel");
-      var MESSAGE = JSON.stringify(OBJECT);
-      channel.publish('', QUEUE, Buffer.from(MESSAGE));
+      // var MESSAGE = JSON.stringify(OBJECT);
+      channel.publish('', QUEUE, Buffer.from(OBJECT));
       console.log("message sent");
     });
     setTimeout(function () {
